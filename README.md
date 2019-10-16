@@ -16,10 +16,10 @@ Changes appear to have been made as per below. Most of which are wrapped in a ve
 
 **Changed GEOS** - Now contains a `LevelOfDetail` and `FilePath/Geoset` Name field
 
-​	**New TANG Sub-Chunk** - Contains tangents, they are C4Vectors with `w` storing the handedness (just like Unity's implementation)
+- **New TANG Sub-Chunk** - Contains tangents, they are C4Vectors with `w` storing the handedness (just like Unity's implementation)
 
-​	**New SKIN Sub-Chunk** - Contains bond indices and weights
+- **New SKIN Sub-Chunk** - Contains bond indices and weights
 
 **Changed MTLS Chunk** - Now contains a `Shader` file path field
 
-​	**Changed LAYS Sub-Chunk** - Contains a new float and float track, presumably `EmissiveGain`
+- **Changed LAYS Sub-Chunk** - Contains a new float and float track, presumably `EmissiveGain`
