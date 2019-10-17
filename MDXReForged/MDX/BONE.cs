@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class BONE : BaseChunk, IReadOnlyCollection<Bone>
+    public class BONE : BaseChunk, IReadOnlyList<Bone>
     {
-        private List<Bone> Bones = new List<Bone>();
+        private readonly List<Bone> Bones = new List<Bone>();
 
-        public BONE(BinaryReader br, uint version) : base(br)
+        public BONE(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Bones.Add(new Bone(br));
         }
+
+        public Bone this[int index] => Bones[index];
 
         public int Count => Bones.Count;
 

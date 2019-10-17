@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class SNDS : BaseChunk, IReadOnlyCollection<SoundTrack>
+    public class SNDS : BaseChunk, IReadOnlyList<SoundTrack>
     {
-        private SoundTrack[] Sounds;
+        private readonly SoundTrack[] Sounds;
 
-        public SNDS(BinaryReader br, uint version) : base(br)
+        public SNDS(BinaryReader br, uint version) : base(br, version)
         {
             Sounds = new SoundTrack[Size / 272];
             for (int i = 0; i < Sounds.Length; i++)
                 Sounds[i] = new SoundTrack(br);
         }
+
+        public SoundTrack this[int index] => Sounds[index];
 
         public int Count => Sounds.Length;
 

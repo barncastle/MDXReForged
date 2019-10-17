@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CAMS : BaseChunk, IReadOnlyCollection<Camera>
+    public class CAMS : BaseChunk, IReadOnlyList<Camera>
     {
-        private List<Camera> Cameras = new List<Camera>();
+        private readonly List<Camera> Cameras = new List<Camera>();
 
-        public CAMS(BinaryReader br, uint version) : base(br)
+        public CAMS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Cameras.Add(new Camera(br));
         }
+
+        public Camera this[int index] => Cameras[index];
 
         public int Count => Cameras.Count;
 
@@ -34,6 +36,10 @@ namespace MDXReForged.MDX
         public float NearClip;
         public CVector3 TargetPosition;
 
+        public Track<CVector3> TranslationKeys;
+        public Track<CVector3> TargetTranslationKeys;
+        public Track<float> RotationKeys;
+
         public Camera(BinaryReader br)
         {
             long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
@@ -44,10 +50,6 @@ namespace MDXReForged.MDX
             FarClip = br.ReadSingle();
             NearClip = br.ReadSingle();
             TargetPosition = new CVector3(br);
-
-            Track<CVector3> TranslationKeys;
-            Track<CVector3> TargetTranslationKeys;
-            Track<float> RotationKeys;
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {

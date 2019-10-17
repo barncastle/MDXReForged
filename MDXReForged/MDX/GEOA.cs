@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class GEOA : BaseChunk, IReadOnlyCollection<GeosetAnimation>
+    public class GEOA : BaseChunk, IReadOnlyList<GeosetAnimation>
     {
-        private List<GeosetAnimation> GeosetAnimations = new List<GeosetAnimation>();
+        private readonly List<GeosetAnimation> GeosetAnimations = new List<GeosetAnimation>();
 
-        public GEOA(BinaryReader br, uint version) : base(br)
+        public GEOA(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
@@ -18,6 +18,8 @@ namespace MDXReForged.MDX
                 GeosetAnimations.Add(new GeosetAnimation(br));
             }
         }
+
+        public GeosetAnimation this[int index] => GeosetAnimations[index];
 
         public int Count => GeosetAnimations.Count;
 

@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class SEQS : BaseChunk, IReadOnlyCollection<Sequence>
+    public class SEQS : BaseChunk, IReadOnlyList<Sequence>
     {
-        private Sequence[] Sequences;
+        private readonly Sequence[] Sequences;
 
-        public SEQS(BinaryReader br, uint version) : base(br)
+        public SEQS(BinaryReader br, uint version) : base(br, version)
         {
             Sequences = new Sequence[Size / 132];
             for (int i = 0; i < Sequences.Length; i++)
                 Sequences[i] = new Sequence(br);
         }
+
+        public Sequence this[int index] => Sequences[index];
 
         public int Count => Sequences.Length;
 

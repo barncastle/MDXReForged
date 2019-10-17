@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class ATCH : BaseChunk, IReadOnlyCollection<Attachment>
+    public class ATCH : BaseChunk, IReadOnlyList<Attachment>
     {
-        private List<Attachment> Attachments = new List<Attachment>();
+        private readonly List<Attachment> Attachments = new List<Attachment>();
 
-        public ATCH(BinaryReader br, uint version) : base(br)
+        public ATCH(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Attachments.Add(new Attachment(br));
         }
+
+        public Attachment this[int index] => Attachments[index];
 
         public int Count => Attachments.Count;
 
@@ -29,7 +31,7 @@ namespace MDXReForged.MDX
         public int AttachmentId;
         public byte Padding;
         public string Path;
-        private readonly Track<float> VisibilityKeys;
+        public Track<float> VisibilityKeys;
 
         public Attachment(BinaryReader br)
         {

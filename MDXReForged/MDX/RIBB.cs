@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class RIBB : BaseChunk, IReadOnlyCollection<RibbonEmitter>
+    public class RIBB : BaseChunk, IReadOnlyList<RibbonEmitter>
     {
-        private List<RibbonEmitter> RibbonEmitters = new List<RibbonEmitter>();
+        private readonly List<RibbonEmitter> RibbonEmitters = new List<RibbonEmitter>();
 
-        public RIBB(BinaryReader br, uint version) : base(br)
+        public RIBB(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 RibbonEmitters.Add(new RibbonEmitter(br));
         }
+
+        public RibbonEmitter this[int index] => RibbonEmitters[index];
 
         public int Count => RibbonEmitters.Count;
 

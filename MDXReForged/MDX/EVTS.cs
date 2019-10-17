@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class EVTS : BaseChunk, IReadOnlyCollection<Event>
+    public class EVTS : BaseChunk, IReadOnlyList<Event>
     {
-        private List<Event> Events = new List<Event>();
+        private readonly List<Event> Events = new List<Event>();
 
-        public EVTS(BinaryReader br, uint version) : base(br)
+        public EVTS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Events.Add(new Event(br));
         }
+
+        public Event this[int index] => Events[index];
 
         public int Count => Events.Count;
 

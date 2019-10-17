@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class LITE : BaseChunk, IReadOnlyCollection<Light>
+    public class LITE : BaseChunk, IReadOnlyList<Light>
     {
-        private List<Light> Lights = new List<Light>();
+        private readonly List<Light> Lights = new List<Light>();
 
-        public LITE(BinaryReader br, uint version) : base(br)
+        public LITE(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Lights.Add(new Light(br));
         }
+
+        public Light this[int index] => Lights[index];
 
         public int Count => Lights.Count;
 

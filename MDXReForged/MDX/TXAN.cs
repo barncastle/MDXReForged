@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class TXAN : BaseChunk, IReadOnlyCollection<TextureAnimation>
+    public class TXAN : BaseChunk, IReadOnlyList<TextureAnimation>
     {
-        private List<TextureAnimation> TextureAnimations = new List<TextureAnimation>();
+        private readonly List<TextureAnimation> TextureAnimations = new List<TextureAnimation>();
 
-        public TXAN(BinaryReader br, uint version) : base(br)
+        public TXAN(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 TextureAnimations.Add(new TextureAnimation(br));
         }
+
+        public TextureAnimation this[int index] => TextureAnimations[index];
 
         public int Count => TextureAnimations.Count;
 

@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class GLBS : BaseChunk, IReadOnlyCollection<int>
+    public class GLBS : BaseChunk, IReadOnlyList<int>
     {
-        private int[] Duration;
+        private readonly int[] Duration;
 
-        public GLBS(BinaryReader br, uint version) : base(br)
+        public GLBS(BinaryReader br, uint version) : base(br, version)
         {
             Duration = new int[Size / 4];
             for (int i = 0; i < Duration.Length; i++)
                 Duration[i] = br.ReadInt32();
         }
+
+        public int this[int index] => Duration[index];
 
         public int Count => Duration.Length;
 

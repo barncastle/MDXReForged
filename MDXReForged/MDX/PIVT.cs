@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class PIVT : BaseChunk, IReadOnlyCollection<CVector3>
+    public class PIVT : BaseChunk, IReadOnlyList<CVector3>
     {
-        private CVector3[] PivotPoints;
+        private readonly CVector3[] PivotPoints;
 
-        public PIVT(BinaryReader br, uint version) : base(br)
+        public PIVT(BinaryReader br, uint version) : base(br, version)
         {
             PivotPoints = new CVector3[Size / 0xC];
             for (int i = 0; i < PivotPoints.Length; i++)
                 PivotPoints[i] = new CVector3(br);
         }
+
+        public CVector3 this[int index] => PivotPoints[index];
 
         public int Count => PivotPoints.Length;
 

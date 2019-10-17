@@ -10,7 +10,7 @@ namespace MDXReForged.MDX
         public CExtent Bounds;
         public uint BlendTime;
 
-        public MODL(BinaryReader br, uint version) : base(br)
+        public MODL(BinaryReader br, uint version) : base(br, version)
         {
             Name = br.ReadCString(Constants.SizeName);
             AnimationFile = br.ReadCString(Constants.SizeFileName);

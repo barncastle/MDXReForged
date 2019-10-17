@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class TEXS : BaseChunk, IReadOnlyCollection<Texture>
+    public class TEXS : BaseChunk, IReadOnlyList<Texture>
     {
-        private Texture[] Textures;
+        private readonly Texture[] Textures;
 
-        public TEXS(BinaryReader br, uint version) : base(br)
+        public TEXS(BinaryReader br, uint version) : base(br, version)
         {
             Textures = new Texture[Size / 268];
             for (int i = 0; i < Textures.Length; i++)
                 Textures[i] = new Texture(br);
         }
+
+        public Texture this[int index] => Textures[index];
 
         public int Count => Textures.Length;
 

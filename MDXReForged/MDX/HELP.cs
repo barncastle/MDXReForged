@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class HELP : BaseChunk, IReadOnlyCollection<Helper>
+    public class HELP : BaseChunk, IReadOnlyList<Helper>
     {
-        private List<Helper> Helpers = new List<Helper>();
+        private readonly List<Helper> Helpers = new List<Helper>();
 
-        public HELP(BinaryReader br, uint version) : base(br)
+        public HELP(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Helpers.Add(new Helper(br));
         }
+
+        public Helper this[int index] => Helpers[index];
 
         public int Count => Helpers.Count;
 

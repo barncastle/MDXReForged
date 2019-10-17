@@ -17,12 +17,7 @@ namespace MDXReForged.MDX
         public string AnimationFile => Get<MODL>().AnimationFile;
         public CExtent Bounds => Get<MODL>().Bounds;
         public uint BlendTime => Get<MODL>().BlendTime;
-
         public uint Version { get; private set; } = 0;
-
-        public bool Has<T>() => Chunks?.Any(x => x.GetType() == typeof(T)) ?? false;
-
-        public T Get<T>() where T : class => (T)(object)(Chunks.FirstOrDefault(x => x.GetType() == typeof(T)));
 
         public Model(string file)
         {
@@ -41,6 +36,11 @@ namespace MDXReForged.MDX
             PopulateHierachy();
         }
 
+        public bool Has<T>() where T : BaseChunk => Chunks.Any(x => x is T);
+
+        public T Get<T>() where T : BaseChunk => (T)Chunks.FirstOrDefault(x => x is T);
+
+
         private void ReadChunk(BinaryReader br, List<BaseChunk> chunks)
         {
             // no point parsing last 8 bytes as it's either padding or an empty chunk
@@ -48,13 +48,15 @@ namespace MDXReForged.MDX
                 return;
 
             string tag = br.ReadString(4);
-            if (typeLookup.ContainsKey(tag))
+            if (TypeLookup.ContainsKey(tag))
             {
                 br.BaseStream.Position -= 4;
-                chunks.Add((BaseChunk)Activator.CreateInstance(typeLookup[tag], br, Version));
+                var chunk = (BaseChunk)Activator.CreateInstance(TypeLookup[tag], br, Version);
 
-                if (tag == "VERS")
-                    Version = ((VERS)chunks.Last()).Version;
+                if (Version == 0 && chunk is VERS vers)
+                    Version = vers.Version;
+
+                chunks.Add(chunk);
             }
             else
             {
@@ -68,14 +70,14 @@ namespace MDXReForged.MDX
 
             // inherits MDLGENOBJECT
             foreach (var chunk in Chunks)
-                if (chunk is IReadOnlyCollection<GenObject> collection)
+                if (chunk is IReadOnlyList<GenObject> collection)
                     hierachy.AddRange(collection);
 
             hierachy.Sort((x, y) => x.ObjectId.CompareTo(y.ObjectId));
             Hierachy = hierachy;
         }
 
-        private static readonly Dictionary<string, Type> typeLookup = new Dictionary<string, Type>
+        private static readonly Dictionary<string, Type> TypeLookup = new Dictionary<string, Type>
         {
             { "VERS", typeof(VERS) },
             { "MODL", typeof(MODL) },

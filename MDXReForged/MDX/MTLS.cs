@@ -5,16 +5,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class MTLS : BaseChunk, IReadOnlyCollection<Material>
+    public class MTLS : BaseChunk, IReadOnlyList<Material>
     {
-        private List<Material> Materials = new List<Material>(6);
+        private readonly List<Material> Materials = new List<Material>(6);
 
-        public MTLS(BinaryReader br, uint version) : base(br)
+        public MTLS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Materials.Add(new Material(br, version));
         }
+
+        public Material this[int index] => Materials[index];
 
         public int Count => Materials.Count;
 
@@ -44,7 +46,7 @@ namespace MDXReForged.MDX
             br.AssertTag("LAYS");
             NrOfLayers = br.ReadUInt32();
             for (int i = 0; i < NrOfLayers; i++)
-                Layers.Add(new Layer(br, PriorityPlane));
+                Layers.Add(new Layer(br, version));
         }
     }
 
@@ -65,10 +67,8 @@ namespace MDXReForged.MDX
         public Track<float> AlphaKeys;
         public Track<float> EmissiveGainKeys;
 
-        public Layer(BinaryReader br, int priorityplane)
+        public Layer(BinaryReader br, uint version)
         {
-            PriorityPlane = priorityplane;
-
             long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
             BlendMode = (MDLTEXOP)br.ReadInt32();
             Flags = (MDLGEO)br.ReadUInt32();
@@ -79,7 +79,7 @@ namespace MDXReForged.MDX
 
             // this is new but the client doesn't actually check the version!
             // sub_7FF6830300A0
-            if (br.BaseStream.Position < end)
+            if (br.BaseStream.Position < end && version >= 900)
                 EmissiveGain = br.ReadSingle();
 
             while (br.BaseStream.Position < end && !br.AtEnd())

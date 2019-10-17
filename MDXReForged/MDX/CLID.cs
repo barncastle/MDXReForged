@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CLID : BaseChunk, IReadOnlyCollection<CollisionShape>
+    public class CLID : BaseChunk, IReadOnlyList<CollisionShape>
     {
-        private List<CollisionShape> CollisionShapes = new List<CollisionShape>();
+        private readonly List<CollisionShape> CollisionShapes = new List<CollisionShape>();
 
-        public CLID(BinaryReader br, uint version) : base(br)
+        public CLID(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 CollisionShapes.Add(new CollisionShape(br));
         }
+
+        public CollisionShape this[int index] => CollisionShapes[index];
 
         public int Count => CollisionShapes.Count;
 

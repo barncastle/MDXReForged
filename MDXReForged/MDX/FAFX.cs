@@ -8,16 +8,18 @@ namespace MDXReForged.MDX
     /// <summary>
     /// FaceFX
     /// </summary>
-    public class FAFX : BaseChunk, IReadOnlyCollection<FaceFX>
+    public class FAFX : BaseChunk, IReadOnlyList<FaceFX>
     {
-        private List<FaceFX> FaceFXs = new List<FaceFX>();
+        private readonly List<FaceFX> FaceFXs = new List<FaceFX>();
 
-        public FAFX(BinaryReader br, uint version) : base(br)
+        public FAFX(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 FaceFXs.Add(new FaceFX(br));
         }
+
+        public FaceFX this[int index] => FaceFXs[index];
 
         public int Count => FaceFXs.Count;
 

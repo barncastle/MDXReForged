@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CORN : BaseChunk, IReadOnlyCollection<ParticleEmitterPopcorn>
+    public class CORN : BaseChunk, IReadOnlyList<ParticleEmitterPopcorn>
     {
-        private List<ParticleEmitterPopcorn> PopcornEmitters = new List<ParticleEmitterPopcorn>();
+        private readonly List<ParticleEmitterPopcorn> PopcornEmitters = new List<ParticleEmitterPopcorn>();
 
-        public CORN(BinaryReader br, uint version) : base(br)
+        public CORN(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 PopcornEmitters.Add(new ParticleEmitterPopcorn(br));
         }
+
+        public ParticleEmitterPopcorn this[int index] => PopcornEmitters[index];
 
         public int Count => PopcornEmitters.Count;
 

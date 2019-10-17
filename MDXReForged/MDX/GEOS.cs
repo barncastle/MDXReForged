@@ -6,16 +6,18 @@ using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class GEOS : BaseChunk, IReadOnlyCollection<Geoset>
+    public class GEOS : BaseChunk, IReadOnlyList<Geoset>
     {
-        private List<Geoset> Geosets = new List<Geoset>();
+        private readonly List<Geoset> Geosets = new List<Geoset>();
 
-        public GEOS(BinaryReader br, uint version) : base(br)
+        public GEOS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
                 Geosets.Add(new Geoset(br, version));
         }
+
+        public Geoset this[int index] => Geosets[index];
 
         public int Count => Geosets.Count;
 
@@ -68,7 +70,7 @@ namespace MDXReForged.MDX
 
         public Geoset(BinaryReader br, uint version)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            _ = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
 
             //Vertices
             if (br.HasTag("VRTX"))
