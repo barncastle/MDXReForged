@@ -29,7 +29,13 @@ namespace MDXReForged.MDX
     public class ParticleEmitterPopcorn : GenObject
     {
         public uint TotalSize;
-        public CExtent Extent;
+        public float Float1;
+        public float Float2;
+        public float Float3;
+        public float Float4;
+        public float Float5;
+        public float Float6;
+        public float Float7;
         public uint UInt1;
         public string FilePath;
         public string AnimVisibilityGuide;
@@ -53,8 +59,14 @@ namespace MDXReForged.MDX
 
             LoadTracks(br);
 
-            Extent = new CExtent(br);
-            UInt1 = br.ReadUInt32();
+            Float1 = br.ReadSingle();
+            Float2 = br.ReadSingle();
+            Float3 = br.ReadSingle();
+            Float4 = br.ReadSingle();
+            Float5 = br.ReadSingle();
+            Float6 = br.ReadSingle();
+            Float7 = br.ReadSingle();
+            UInt1 = br.ReadUInt32(); // boolean?
             FilePath = br.ReadCString(Constants.SizeFileName);
             AnimVisibilityGuide = br.ReadCString(Constants.SizeFileName);
 
