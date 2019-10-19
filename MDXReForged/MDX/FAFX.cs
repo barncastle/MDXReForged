@@ -1,31 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
     /// <summary>
     /// FaceFX
     /// </summary>
-    public class FAFX : BaseChunk, IReadOnlyList<FaceFX>
+    public class FAFX : EnumerableBaseChunk<FaceFX>
     {
-        private readonly List<FaceFX> FaceFXs = new List<FaceFX>();
-
         public FAFX(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                FaceFXs.Add(new FaceFX(br));
+                Values.Add(new FaceFX(br));
         }
-
-        public FaceFX this[int index] => FaceFXs[index];
-
-        public int Count => FaceFXs.Count;
-
-        public IEnumerator<FaceFX> GetEnumerator() => FaceFXs.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => FaceFXs.AsEnumerable().GetEnumerator();
     }
 
     public class FaceFX

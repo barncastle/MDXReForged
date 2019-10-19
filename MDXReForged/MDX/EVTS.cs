@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
-    public class EVTS : BaseChunk, IReadOnlyList<Event>
+    public class EVTS : EnumerableBaseChunk<Event>
     {
-        private readonly List<Event> Events = new List<Event>();
-
         public EVTS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Events.Add(new Event(br));
+                Values.Add(new Event(br));
         }
-
-        public Event this[int index] => Events[index];
-
-        public int Count => Events.Count;
-
-        public IEnumerator<Event> GetEnumerator() => Events.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Events.AsEnumerable().GetEnumerator();
     }
 
     public class Event : GenObject

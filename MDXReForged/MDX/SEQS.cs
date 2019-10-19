@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class SEQS : BaseChunk, IReadOnlyList<Sequence>
+    public class SEQS : EnumerableBaseChunk<Sequence>
     {
-        private readonly Sequence[] Sequences;
-
         public SEQS(BinaryReader br, uint version) : base(br, version)
         {
-            Sequences = new Sequence[Size / 132];
-            for (int i = 0; i < Sequences.Length; i++)
-                Sequences[i] = new Sequence(br);
+            long end = br.BaseStream.Position + Size;
+            while (br.BaseStream.Position < end)
+                Values.Add(new Sequence(br));
         }
-
-        public Sequence this[int index] => Sequences[index];
-
-        public int Count => Sequences.Length;
-
-        public IEnumerator<Sequence> GetEnumerator() => Sequences.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Sequences.AsEnumerable().GetEnumerator();
     }
 
     public class Sequence

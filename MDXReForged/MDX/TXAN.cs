@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class TXAN : BaseChunk, IReadOnlyList<TextureAnimation>
+    public class TXAN : EnumerableBaseChunk<TextureAnimation>
     {
-        private readonly List<TextureAnimation> TextureAnimations = new List<TextureAnimation>();
-
         public TXAN(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                TextureAnimations.Add(new TextureAnimation(br));
+                Values.Add(new TextureAnimation(br));
         }
-
-        public TextureAnimation this[int index] => TextureAnimations[index];
-
-        public int Count => TextureAnimations.Count;
-
-        public IEnumerator<TextureAnimation> GetEnumerator() => TextureAnimations.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => TextureAnimations.AsEnumerable().GetEnumerator();
     }
 
     public class TextureAnimation

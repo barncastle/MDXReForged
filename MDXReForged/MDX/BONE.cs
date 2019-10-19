@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
-    public class BONE : BaseChunk, IReadOnlyList<Bone>
+    public class BONE : EnumerableBaseChunk<Bone>
     {
-        private readonly List<Bone> Bones = new List<Bone>();
-
         public BONE(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Bones.Add(new Bone(br));
+                Values.Add(new Bone(br));
         }
-
-        public Bone this[int index] => Bones[index];
-
-        public int Count => Bones.Count;
-
-        public IEnumerator<Bone> GetEnumerator() => Bones.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Bones.AsEnumerable().GetEnumerator();
     }
 
     public class Bone : GenObject

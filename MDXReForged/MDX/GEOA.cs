@@ -1,31 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class GEOA : BaseChunk, IReadOnlyList<GeosetAnimation>
+    public class GEOA : EnumerableBaseChunk<GeosetAnimation>
     {
-        private readonly List<GeosetAnimation> GeosetAnimations = new List<GeosetAnimation>();
-
         public GEOA(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-            {
-                GeosetAnimations.Add(new GeosetAnimation(br));
-            }
+                Values.Add(new GeosetAnimation(br));
         }
-
-        public GeosetAnimation this[int index] => GeosetAnimations[index];
-
-        public int Count => GeosetAnimations.Count;
-
-        public IEnumerator<GeosetAnimation> GetEnumerator() => GeosetAnimations.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GeosetAnimations.AsEnumerable().GetEnumerator();
     }
 
     public class GeosetAnimation

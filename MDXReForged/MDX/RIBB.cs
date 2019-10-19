@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class RIBB : BaseChunk, IReadOnlyList<RibbonEmitter>
+    public class RIBB : EnumerableBaseChunk<RibbonEmitter>
     {
-        private readonly List<RibbonEmitter> RibbonEmitters = new List<RibbonEmitter>();
-
         public RIBB(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                RibbonEmitters.Add(new RibbonEmitter(br));
+                Values.Add(new RibbonEmitter(br));
         }
-
-        public RibbonEmitter this[int index] => RibbonEmitters[index];
-
-        public int Count => RibbonEmitters.Count;
-
-        public IEnumerator<RibbonEmitter> GetEnumerator() => RibbonEmitters.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => RibbonEmitters.AsEnumerable().GetEnumerator();
     }
 
     public class RibbonEmitter : GenObject

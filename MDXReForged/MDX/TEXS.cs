@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
-    public class TEXS : BaseChunk, IReadOnlyList<Texture>
+    public class TEXS : EnumerableBaseChunk<Texture>
     {
-        private readonly Texture[] Textures;
-
         public TEXS(BinaryReader br, uint version) : base(br, version)
         {
-            Textures = new Texture[Size / 268];
-            for (int i = 0; i < Textures.Length; i++)
-                Textures[i] = new Texture(br);
+            long end = br.BaseStream.Position + Size;
+            while (br.BaseStream.Position < end)
+                Values.Add(new Texture(br));
         }
-
-        public Texture this[int index] => Textures[index];
-
-        public int Count => Textures.Length;
-
-        public IEnumerator<Texture> GetEnumerator() => Textures.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Textures.AsEnumerable().GetEnumerator();
     }
 
     public class Texture

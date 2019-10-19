@@ -1,28 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class MTLS : BaseChunk, IReadOnlyList<Material>
+    public class MTLS : EnumerableBaseChunk<Material>
     {
-        private readonly List<Material> Materials = new List<Material>(6);
-
         public MTLS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Materials.Add(new Material(br, version));
+                Values.Add(new Material(br, version));
         }
-
-        public Material this[int index] => Materials[index];
-
-        public int Count => Materials.Count;
-
-        public IEnumerator<Material> GetEnumerator() => Materials.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Materials.AsEnumerable().GetEnumerator();
     }
 
     public class Material

@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class PRE2 : BaseChunk, IReadOnlyList<ParticleEmitter2>
+    public class PRE2 : EnumerableBaseChunk<ParticleEmitter2>
     {
-        private readonly List<ParticleEmitter2> ParticleEmitter2s = new List<ParticleEmitter2>();
-
         public PRE2(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                ParticleEmitter2s.Add(new ParticleEmitter2(br));
+                Values.Add(new ParticleEmitter2(br));
         }
-
-        public ParticleEmitter2 this[int index] => ParticleEmitter2s[index];
-
-        public int Count => ParticleEmitter2s.Count;
-
-        public IEnumerator<ParticleEmitter2> GetEnumerator() => ParticleEmitter2s.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ParticleEmitter2s.AsEnumerable().GetEnumerator();
     }
 
     public class ParticleEmitter2 : GenObject

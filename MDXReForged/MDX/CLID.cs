@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CLID : BaseChunk, IReadOnlyList<CollisionShape>
+    public class CLID : EnumerableBaseChunk<CollisionShape>
     {
-        private readonly List<CollisionShape> CollisionShapes = new List<CollisionShape>();
-
         public CLID(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                CollisionShapes.Add(new CollisionShape(br));
+                Values.Add(new CollisionShape(br));
         }
-
-        public CollisionShape this[int index] => CollisionShapes[index];
-
-        public int Count => CollisionShapes.Count;
-
-        public IEnumerator<CollisionShape> GetEnumerator() => CollisionShapes.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => CollisionShapes.AsEnumerable().GetEnumerator();
     }
 
     public class CollisionShape : GenObject

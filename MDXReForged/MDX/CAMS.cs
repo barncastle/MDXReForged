@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CAMS : BaseChunk, IReadOnlyList<Camera>
+    public class CAMS : EnumerableBaseChunk<Camera>
     {
-        private readonly List<Camera> Cameras = new List<Camera>();
-
         public CAMS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Cameras.Add(new Camera(br));
+                Values.Add(new Camera(br));
         }
-
-        public Camera this[int index] => Cameras[index];
-
-        public int Count => Cameras.Count;
-
-        public IEnumerator<Camera> GetEnumerator() => Cameras.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Cameras.AsEnumerable().GetEnumerator();
     }
 
     public class Camera

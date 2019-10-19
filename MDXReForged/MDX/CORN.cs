@@ -1,29 +1,16 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class CORN : BaseChunk, IReadOnlyList<ParticleEmitterPopcorn>
+    public class CORN : EnumerableBaseChunk<ParticleEmitterPopcorn>
     {
-        private readonly List<ParticleEmitterPopcorn> PopcornEmitters = new List<ParticleEmitterPopcorn>();
-
         public CORN(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                PopcornEmitters.Add(new ParticleEmitterPopcorn(br));
+                Values.Add(new ParticleEmitterPopcorn(br));
         }
-
-        public ParticleEmitterPopcorn this[int index] => PopcornEmitters[index];
-
-        public int Count => PopcornEmitters.Count;
-
-        public IEnumerator<ParticleEmitterPopcorn> GetEnumerator() => PopcornEmitters.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => PopcornEmitters.AsEnumerable().GetEnumerator();
     }
 
     public class ParticleEmitterPopcorn : GenObject

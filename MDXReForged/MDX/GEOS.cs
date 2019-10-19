@@ -1,29 +1,17 @@
 ﻿using MDXReForged.Structs;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MDXReForged.MDX
 {
-    public class GEOS : BaseChunk, IReadOnlyList<Geoset>
+    public class GEOS : EnumerableBaseChunk<Geoset>
     {
-        private readonly List<Geoset> Geosets = new List<Geoset>();
-
         public GEOS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Geosets.Add(new Geoset(br, version));
+                Values.Add(new Geoset(br, version));
         }
-
-        public Geoset this[int index] => Geosets[index];
-
-        public int Count => Geosets.Count;
-
-        public IEnumerator<Geoset> GetEnumerator() => Geosets.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Geosets.AsEnumerable().GetEnumerator();
     }
 
     public class Geoset

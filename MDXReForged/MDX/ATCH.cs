@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
-    public class ATCH : BaseChunk, IReadOnlyList<Attachment>
+    public class ATCH : EnumerableBaseChunk<Attachment>
     {
-        private readonly List<Attachment> Attachments = new List<Attachment>();
-
         public ATCH(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Attachments.Add(new Attachment(br));
+                Values.Add(new Attachment(br));
         }
-
-        public Attachment this[int index] => Attachments[index];
-
-        public int Count => Attachments.Count;
-
-        public IEnumerator<Attachment> GetEnumerator() => Attachments.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Attachments.AsEnumerable().GetEnumerator();
     }
 
     public class Attachment : GenObject

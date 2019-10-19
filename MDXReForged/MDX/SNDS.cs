@@ -1,28 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace MDXReForged.MDX
 {
-    public class SNDS : BaseChunk, IReadOnlyList<SoundTrack>
+    public class SNDS : EnumerableBaseChunk<SoundTrack>
     {
-        private readonly SoundTrack[] Sounds;
-
         public SNDS(BinaryReader br, uint version) : base(br, version)
         {
-            Sounds = new SoundTrack[Size / 272];
-            for (int i = 0; i < Sounds.Length; i++)
-                Sounds[i] = new SoundTrack(br);
+            long end = br.BaseStream.Position + Size;
+            while (br.BaseStream.Position < end)
+                Values.Add(new SoundTrack(br));
         }
-
-        public SoundTrack this[int index] => Sounds[index];
-
-        public int Count => Sounds.Length;
-
-        public IEnumerator<SoundTrack> GetEnumerator() => Sounds.AsEnumerable().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Sounds.AsEnumerable().GetEnumerator();
     }
 
     public class SoundTrack
